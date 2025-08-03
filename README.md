@@ -7,7 +7,9 @@ Hello. In this article, we will perform a hardening process on Metasploitable 2,
 ## FTP(21)
 Let's start with FTP. FTP is a file transfer protocol used to transfer files between remote hosts. Metasploitable 2 runs vsftpd version 2.3.4, which is vulnerable to backdoor code execution. To fix this vulnerability, anonymous uploads must be disabled by setting anon_upload_enable=NO in the /etc/vsftpd.conf file. Additionally, since the backdoor is located on port 6200, traffic to port 6200 should be blocked, which can be done using the following iptables rules.
 
- <img src="imagess/ftpc.png" width="500" />
+<img src="imagess/ftpc.png" width="500" />
+
+<img src="imagess/6200f.png" width="500" />
 
 ## Telnet,Rexec,Rlogin (23,512,513)
 Telnet, Rexec, and Rlogin are remote access services. They allow users to execute commands and interact with remote hosts. Unfortunately, data is sent in plain text, which is dangerous because sensitive information such as passwords can be transmitted. Therefore, these services should be disabled. More secure alternatives such as SSH should be used, as they provide a level of encryption. Telnet, Rexec, and Rlogin can be disabled by going to /etc/inetd.conf and commenting out the telnet, shell, and login entries, respectively. 
@@ -48,13 +50,23 @@ MySQL is a database server running on Metasploitable 2 with weak configuration. 
 
 
 ## PostgresSQL (5432)
-Postgres, verileri depolamak için kullanılan bir SQL veritabanıdır. MSF6'nın linux/postgres/postgres_payload kullanılarak bir meterpreter kabuğu oluşturulabilir. Bu açıktan yararlanmayı etkisiz hale getirmek için, yükü dağıtmak için kullanılan dizin değiştirilmelidir. Bu, veri dizinini /etc/postgresql/8.3/main/postgresql.conf içindeki varsayılandan başka bir şeye değiştirerek yapılabilir.
+Postgresql is an SQL database used to store data. A Meterpreter shell can be created using MSF6's linux/postgres/postgres_payload. To disable this exploit, the directory used to distribute the payload must be changed. This can be done by changing the data directory to something other than the default in /etc/postgresql/8.3/main/postgresql.conf.
 
 <img src="imagess/payloadp.png" width="500" />
 
 - Furthermore, the password for the postgres user is postgres which should also be changed to a more secure password.
 
  <img src="imagess/postgre.png" width="500" />
+
+##  Bindshell(1524)
+Due to the last line above ingreslock stream tcp nowait ```root /bin/bash bash -i```, potential bad actors can easily spawn a root shell using tools like Meterpreter and Netcat. This line needs to be removed or commented out to remove the backdoor vulnerability.
+
+## UnrealIRCD (6697)
+UnrealIRCD is a internet relay chat service that allows users to message each other by joining channels. (chat rooms) Unfortunately, the version of UnrealIRCD that is running on Metasploitable 2 has a built-in backdoor that is vulnerable to arbitrary code execution. In order to fix this vulnerability, UnrealIRCD should be uninstalled (risk avoidance) or re-downloaded from the companies website.
+
+
+- After each fix, Metasploitable 2 should be restarted for the change to persist.
+
 
 
 
