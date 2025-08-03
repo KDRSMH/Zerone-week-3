@@ -36,6 +36,29 @@ NFS, if you don't know what it is yet, is a file sharing service that allows use
 
 <img src="imagess/nfsip.png" width="500" />
 
+## Apache Tomcat AJP Connector (8009)
+The AJP Connector facilitates communication between Tomcat and the installed web server which in this case is Apache. Its similar to that of a load balancer as it offload static rendering of web pages to the web server while directing dynamic java processing to Tomcat. This particular version of Tomcat installed on Metasploitable 2 is running a vulnerable AJP Connector. The Ghostcat vulnerability (CVE-2020–1938) allows an attacker to retrieve all files in the web application that can be reached with ServletContext.getResourceAsStream(). It also allows the attacker to process any file as JSP which coupled with remote file upload could lead to remote code execution. This vulnerability can be remediated by adding the following line to /etc/tomcat5.5/server.xml which provides a layer of authentication.
+
+```<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" address="YOUR_TOMCAT_IP_ADDRESS" secret="YOUR_TOMCAT_AJP_SECRET"/>```
+
+## MySQL Database (3306)
+MySQL is a database server running on Metasploitable 2 with weak configuration. It uses port 3306 by default. In this version, attackers can access MySQL without authentication due to vulnerabilities such as the root user having no password. This allows attackers to view, modify, and inject malicious SQL commands into the database. The security vulnerability can be mitigated by setting strong passwords and configuring ```bind-address=127.0.0.1.```
+
+<img src="imagess/mysql.png" width="500" />
+
+
+## PostgresSQL (5432)
+Postgres, verileri depolamak için kullanılan bir SQL veritabanıdır. MSF6'nın linux/postgres/postgres_payload kullanılarak bir meterpreter kabuğu oluşturulabilir. Bu açıktan yararlanmayı etkisiz hale getirmek için, yükü dağıtmak için kullanılan dizin değiştirilmelidir. Bu, veri dizinini /etc/postgresql/8.3/main/postgresql.conf içindeki varsayılandan başka bir şeye değiştirerek yapılabilir.
+
+<img src="imagess/payloadp.png" width="500" />
+
+- Furthermore, the password for the postgres user is postgres which should also be changed to a more secure password.
+
+ <img src="imagess/postgre.png" width="500" />
+
+
+
+
 
 
 
