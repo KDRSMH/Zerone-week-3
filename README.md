@@ -64,6 +64,13 @@ Due to the last line above ingreslock stream tcp nowait ```root /bin/bash bash -
 ## UnrealIRCD (6697)
 UnrealIRCD is a internet relay chat service that allows users to message each other by joining channels. (chat rooms) Unfortunately, the version of UnrealIRCD that is running on Metasploitable 2 has a built-in backdoor that is vulnerable to arbitrary code execution. In order to fix this vulnerability, UnrealIRCD should be uninstalled (risk avoidance) or re-downloaded from the companies website.
 
+## Java RMI Service (1099)
+Java RMI (Remote Method Invocation) enables a Java application to remotely access Java objects on another machine. This mechanism works with a client-server architecture and provides access through the rmiregistry service. The RMI service included in Metasploitable 2 is open to external connections without authentication. This allows attackers to upload specially crafted malicious Java objects to the target system. In particular, objects registered with the UnicastRemoteObject class can be made executable. This allows attackers to execute remote commands (RCE) on the target. This security vulnerability can be mitigated by restricting access to the RMI service to authorized networks only and enabling authentication/encryption (SSL/RMI Security Manager) layers.
+
+ <img src="imagess/rmı.png" width="500" />
+
+
+
 
 - After each fix, Metasploitable 2 should be restarted for the change to persist.
 
